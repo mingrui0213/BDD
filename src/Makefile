@@ -6,7 +6,7 @@ COMPILER_OPTS = -c -g -Wall
 LINKER = g++
 LINKER_OPTS = -o bdd
 
-OBJS = cnf.o test.o
+OBJS = cnf.o test.o bdd.o
 
 all : $(OBJS)
 	$(LINKER) $(LINKER_OPTS) $(OBJS)
@@ -16,6 +16,9 @@ cnf.o : cnf.h cnf.cpp
 
 test.o : test.cpp cnf.h
 	$(COMPILER) $(COMPILER_OPTS) test.cpp
+
+bdd.o : bdd.h bdd.cpp
+	$(COMPILER) $(COMPILER_OPTS) bdd.cpp
 
 .PHONY: help
 
