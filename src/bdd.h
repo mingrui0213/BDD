@@ -15,7 +15,7 @@ class BDD {
         void build_BDD(CNF cnf);
         void destroy_BDD(); 
 	void setroot(node n);
-	node insert(char v, CNF f_a, CNF f_a_prime);   
+	node insert(node n, CNF f_a, CNF f_a_prime);   
     private:
         
         node root;

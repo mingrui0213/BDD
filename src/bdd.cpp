@@ -15,30 +15,33 @@ void BDD::setroot(node n)
 	root = n;
 }
 
-node BDD::insert (char v, CNF f_a, CNF f_a_prime)
+node BDD::insert (node n, CNF f_a, CNF f_a_prime)
 {
 	if(root.level >= f_a.getvar().size() || root.level >= f_a_prime.getvar().size())
 		return root;
-	node left,right;
-	var.push_back(v);
+	node* left=NULL;
+	node* right=NULL;
+	var.push_back(n.v);
 	root.level++;
-	right.v = f_a.getvar()[root.level];
-	left.v = f_a_prime.getvar()[root.level];
-	right.cnf = f_a;
-	left.cnf = f_a_prime;
-	right.level = root.level;
-	left. level = root.level;
-	right.left = NULL; 
-	right.right = NULL;
-	left.left = NULL;
-	left.right= NULL;
+	right->v = f_a.getvar()[root.level];
+	left->v = f_a_prime.getvar()[root.level];
+	right->cnf = f_a;
+	left->cnf = f_a_prime;
+	right->level = root.level;
+	left->level = root.level;
+	right->left = NULL; 
+	right->right = NULL;
+	left->left = NULL;
+	left->right= NULL;
 		
-	root.left = &left;
-	root.right = &right;
+	n.left = left;
+	n.right = right;
+	root.left = n.left;
+	root.right = n.right;
 	setroot(root);
 	
-	insert (left.v, f_a_prime.cofactor_p(left.v), f_a_prime.cofactor_n(left.v));
-	insert (right.v, f_a.cofactor_p(right.v), f_a.cofactor_n(right.v));
+	insert (*n.left, f_a_prime.cofactor_p(left->v), f_a_prime.cofactor_n(left->v));
+	insert (*n.right, f_a.cofactor_p(right->v), f_a.cofactor_n(right->v));
 }
  
 void BDD::build_BDD(CNF cnf){
@@ -59,5 +62,5 @@ void BDD::build_BDD(CNF cnf){
 //	BDD e;
 //	e.build_BDD(f_a_prime);
 	
-	insert (root.v, f_a, f_a_prime);
+	insert (root, f_a, f_a_prime);
 }		
