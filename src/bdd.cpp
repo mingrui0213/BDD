@@ -19,7 +19,7 @@ node BDD::insert (char v, CNF f_a, CNF f_a_prime)
 {
 	if(root.level >= f_a.getvar().size() || root.level >= f_a_prime.getvar().size())
 		return root;
-	node r,left,right;
+	node left,right;
 	var.push_back(v);
 	root.level++;
 	right.v = f_a.getvar()[root.level];
@@ -33,9 +33,9 @@ node BDD::insert (char v, CNF f_a, CNF f_a_prime)
 	left.left = NULL;
 	left.right= NULL;
 		
-	r.left = &left;
-	r.right = &right;
-	setroot(r);
+	root.left = &left;
+	root.right = &right;
+	setroot(root);
 	
 	insert (left.v, f_a_prime.cofactor_p(left.v), f_a_prime.cofactor_n(left.v));
 	insert (right.v, f_a.cofactor_p(right.v), f_a.cofactor_n(right.v));
