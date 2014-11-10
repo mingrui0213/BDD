@@ -1,7 +1,8 @@
 
 #include <iostream>
 
-#include "cnf.h"
+#include "bdd.h"
+
 
 int main()
 {
@@ -9,5 +10,8 @@ int main()
     string s = "(a+b+c+a+c'+b+c'+d)(a+e+d)(b'+d')(z+k+f)";
 
     test.build_analyze(s);
+
+    BDD bdd;
+    bdd.build_BDD(test);
     return 0;
 }
