@@ -6,6 +6,10 @@
 
 using namespace std;
 
+vector<char> CNF:: getvar(){
+	return var;
+}
+
 void CNF::get_clause(string s){
     cout << "original string: " << s << endl;
     cout << "=== parsing clause ===" << endl;
