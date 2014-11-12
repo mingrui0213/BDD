@@ -1,5 +1,6 @@
 #include "bdd.h"
 #include <iostream>
+
 using namespace std;
 
 BDD::BDD()
@@ -9,12 +10,12 @@ BDD::BDD()
 
 void BDD::destroy_BDD(BDDnode * node)
 {
-	if(root)
+	if(node != NULL)
 	{
-		destroy_BDD(root->left);
-		destroy_BDD(root->right);
-		delete root;
-		root = NULL;
+		destroy_BDD(node->left);
+		destroy_BDD(node->right);
+		delete node;
+		node = NULL;
 	}
 }
 
@@ -94,3 +95,4 @@ void BDD::build_literal(char v, bool isP)
 		root->right =t;
 	}
 }
+

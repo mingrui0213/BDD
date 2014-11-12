@@ -14,11 +14,11 @@ all : $(OBJS)
 cnf.o : cnf.h cnf.cpp
 	$(COMPILER) $(COMPILER_OPTS) cnf.cpp
 
-test.o : test.cpp cnf.h bdd.h
-	$(COMPILER) $(COMPILER_OPTS) test.cpp
-
-bdd.o : bdd.h cnf.h bdd.cpp
+bdd.o : bdd.h bdd.cpp
 	$(COMPILER) $(COMPILER_OPTS) bdd.cpp
+
+test.o : cnf.h bdd.h test.cpp
+	$(COMPILER) $(COMPILER_OPTS) test.cpp
 
 .PHONY: help
 

@@ -12,7 +12,8 @@ class CNF {
         void clear();
         CNF cofactor_p(char v);
         CNF cofactor_n(char v);
-	vector<char> getvar();
+	    vector<char> getvar();
+    
     private:
         
         void get_clause(string s);

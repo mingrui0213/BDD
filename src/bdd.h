@@ -1,4 +1,3 @@
-#include "cnf.h"
 
 struct BDDnode {
 	char v;
@@ -20,6 +19,6 @@ class BDD {
 		void destroy_BDD(BDDnode* node);
 		
 //	private:
-		static BDDnode* root;
+		BDDnode* root;
 
 };

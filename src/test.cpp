@@ -1,7 +1,9 @@
 
 #include <iostream>
-
+#include "cnf.h"
 #include "bdd.h"
+
+using namespace std;
 
 int main()
 {
@@ -10,14 +12,12 @@ int main()
 
     test.build_analyze(s);
 
+
     BDD bdd;
     bdd.build_literal('a',true);
     cout<<"bdd left leaf is "<<bdd.root->left->leaf<<endl;
     cout<<"bdd right leaf is "<<bdd.root->right->leaf<<endl;
     cout<<"bdd var is "<<bdd.root->v<<endl;
-//	cout<<"bdd var is "<<bdd.getroot().v<<" bdd level is " <<bdd.getroot().level
-//	<<"\nleft node level is "<<bdd.getroot().left->level
-//	<<"\nleft node cnf is "<<bdd.getroot().left->cnf.getvar()[bdd.getroot().left->level]<<endl;
   
     return 0;
 }
