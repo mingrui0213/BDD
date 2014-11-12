@@ -1,5 +1,6 @@
-#include "bdd.h"
 #include <iostream>
+
+#include "bdd.h"
 
 using namespace std;
 
@@ -10,8 +11,7 @@ BDD::BDD()
 
 void BDD::destroy_BDD(BDDnode * node)
 {
-	if(node != NULL)
-	{
+	if (node != NULL) {
 		destroy_BDD(node->left);
 		destroy_BDD(node->right);
 		delete node;
@@ -27,33 +27,24 @@ BDD::~BDD()
 // assume to is not NULL, to->left is NULL, to->right is NULL
 void BDD::copy(BDDnode *to, BDDnode *from)
 {
-	if(from != NULL)
-	{
-		if (from->isLeaf)
-		{	
+	if(from != NULL){
+		if (from->isLeaf) {	
 			to->leaf = from->leaf;
 			to->isLeaf = to->isLeaf;
-		}
-		else
-		{
+		} else {
 			to->v = from->v;
 			to->isLeaf = from->isLeaf;
 		}
 		
-		if (from->left != NULL)
-		{
+		if (from->left != NULL) {
 			to->left = new BDDnode;
 			copy(to->left,from->left);	
 		}
-		if (from->right != NULL)
-		{
+		if (from->right != NULL) {
 			to->right = new BDDnode;
 			copy(to->right,from->right);
 		}
-
-	}
-	else
-	{
+	} else {
 		delete to;
 		to = NULL;	
 	}
@@ -61,15 +52,14 @@ void BDD::copy(BDDnode *to, BDDnode *from)
 
 BDD& BDD::operator=(const BDD & bdd)
 {
-	if(this != &bdd)
-	{
+	if (this != &bdd) {
 		destroy_BDD(root);
 		root = new BDDnode;
 		copy(this->root, bdd.root);
 		return *this;
-	}
-	else
+	} else {
 		return *this;
+    }
 }
 
 void BDD::build_literal(char v, bool isP)
@@ -84,13 +74,10 @@ void BDD::build_literal(char v, bool isP)
 	e->leaf = false;
 	e->isLeaf = true;
 		
-	if (isP)
-	{	
+	if (isP == true) {	
 		root->left = t;
 		root->right = e;
-	}
-	else
-	{
+	} else {
 		root->left = e;
 		root->right =t;
 	}
