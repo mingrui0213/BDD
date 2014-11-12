@@ -1,27 +1,25 @@
-
 #include "cnf.h"
 
-struct node {
-    CNF cnf;
-    int level;
-    char v;
-    node * left;
-    node * right;
+struct BDDnode {
+	char v;
+	bool leaf;
+	BDDnode* left;
+	BDDnode* right;
+	bool isLeaf;
 };
 
 class BDD {
-    public:
-	node getroot();        
-        void build_BDD(CNF cnf);
-        void destroy_BDD(); 
-	void setroot(node n);
-	node insert(node n, CNF f_a, CNF f_a_prime);   
-    private:
-        
-        node root;
-	
-        vector<char> var;
-        vector<char> var_order;
+	public:
+		BDD();
+		~BDD();
+		BDD& operator=(const BDD & bdd);
+		void copy(BDDnode *to, BDDnode* from);
+		void build_literal(char v, bool isP);
+		//BDD BDD_OR(BDD a, BDD b);
+		//BDD BDD_AND(BDD a, BDD b);
+		void destroy_BDD(BDDnode* node);
+		
+//	private:
+		static BDDnode* root;
 
 };
-
