@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 
@@ -10,11 +9,11 @@ void CNF::get_clause(string s)
 {
     cout << "original string: " << s << endl;
     cout << "=== parsing clause ===" << endl;
-    if (s[0] == '('){
+    if (s[0] == '(') {
         string delimiter = ")";
         size_t pos = 0;
         string token;
-        while ((pos = s.find(delimiter)) != string::npos){
+        while ((pos = s.find(delimiter)) != string::npos) {
             token = s.substr(1,pos-1);
             cout << token << endl;
             clause.push_back(token);
@@ -43,7 +42,7 @@ void CNF::parse_clause()
         var.push_back(target[0]);
     }
     sort(var.begin(), var.end());
-    var.erase( unique(var.begin(), var.end()), var.end());
+    var.erase(unique(var.begin(), var.end()), var.end());
     cout << "There are " << var.size() << " variables." << endl;
     for (int i = 0; i < var.size(); i++)
         cout << var[i] << " ";
@@ -59,13 +58,14 @@ void CNF::build_analyze(string s)
         cv_table[i].resize(var.size()*2);
     fill_table();
     cout << "=== Clause-Variable Table ===" << endl;
-    for (int i = 0; i < clause.size(); i++)
-    {
+    for (int i = 0; i < clause.size(); i++) {
         cout << "clause " << i << endl;
         for (int j = 0; j < var.size()*2; j++)
             cout << cv_table[i][j] << " ";
         cout << endl;
     }
+    cout << "=== Variable Ordering ===" << endl;
+    alphabetical_var_order();
 }
 
 void CNF::fill_table()
@@ -99,14 +99,14 @@ CNF CNF::cofactor_p(char v)
 {
     vector<char> tmp;
     tmp.push_back(v);
-    if (includes(var.begin(),var.end(),tmp.begin(),tmp.end())){
+    if (includes(var.begin(),var.end(),tmp.begin(),tmp.end())) {
         int var_index;
         CNF ret(*this);
         ret.cv_table.clear();
         ret.clause.clear();
         var_index = find(var.begin(),var.end(),v) - var.begin();
         for (int i = 0; i < clause.size(); i++) {
-            if (!cv_table[i][var_index*2]){
+            if (!cv_table[i][var_index*2]) {
                 ret.clause.push_back(clause[i]);
                 ret.cv_table.push_back(cv_table[i]);
             }
@@ -132,5 +132,20 @@ CNF CNF::cofactor_n(char v)
         }
         return ret;
     } else return *this;
+}
+
+int CNF::get_num_var()
+{
+    return var.size();
+}
+
+void CNF::alphabetical_var_order()
+{
+    cout << "employ the alphabetical variable ordering" << endl;
+    var_order = var;
+    sort(var_order.begin(),var_order.end());
+    for (int i = 0; i < var_order.size(); i++)
+        cout << var_order[i] << " ";
+    cout << endl;
 }
 
