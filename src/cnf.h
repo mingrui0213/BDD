@@ -21,7 +21,7 @@ class CNF {
         void parse_clause();
         void fill_table();
         void alphabetical_var_order();
-       
+        void static_var_order();
         void dyn_var_order(); 
         
         vector<string> clause;

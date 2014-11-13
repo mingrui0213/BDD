@@ -72,8 +72,12 @@ void BDD::build_literal(char v, bool isP)
 	BDDnode *e = new BDDnode;
 	t->leaf = true;
 	t->isLeaf = true;
-	e->leaf = false;
+	t->left = NULL;
+    t->right = NULL;
+    e->leaf = false;
 	e->isLeaf = true;
+    e->left = NULL;
+    e->right = NULL;
 		
 	if (isP == true) {	
 		root->left = t;
