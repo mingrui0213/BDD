@@ -29,7 +29,7 @@ int main()
 //	bool lb = bdda.isLiteral(bdda.root);  
 
 // 	cout<<"lb = "<<lb<<endl;
-	if(bdda.isLiteral(bdda)){
+	if(bdda.isLiteral(bdda.root)){
 	//	cout<<bddb.root->right->leaf<<endl;
 	//	cout<<bdda.root->left->leaf<<endl;
 	        cout<<"bdda is a literal"<<endl;}
@@ -57,7 +57,8 @@ int main()
 		cout<<"c->root->left "<<c.root->left->leaf<<endl;
 		cout<<"c->root->right "<<c.root->right->leaf<<endl;
 	}     
-
+    BDDnode *t = bdda.root;
+    cout<<bdda.compare(bdda.root, t);
     BDD r = bdda.BDD_AND(bdda,bddb);
     cout<<"\nbdd_and(a, b) =r"<<endl;
     cout<<"r->root->v = "<<r.root->v<<endl;
