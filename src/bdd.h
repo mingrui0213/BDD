@@ -19,35 +19,42 @@ struct unique_table_key{
 };
 
 struct computed_table {
+	public:
 	computed_table_key key;
 	BDDnode* node;
 	computed_table* next;
+//	computed_table* init_ct();
 };
 
 struct unique_table{
+	public:
 	unique_table_key key;
 	unique_table* next;
+//	unique_table* init_ut();
 };
 
-/*
-extern computed_table* ct = new computed_table;
-ct->key.left = NULL;
-ct->key.right = NULL;
-ct->node = NULL;
-ct->next = NULL;
-extern computed_table** cp = &(ct);
-extern unique_table* ut = new unique_table;
-ut->key.left = NULL;
-ut->key.right = NULL;
-ut->key.v = '\0';
-ut->next = NULL;
-*/
+
+extern computed_table* ct  ;
+//ct->key.left = NULL;
+//ct->key.right = NULL;
+//ct->node = NULL;
+//ct->next = NULL;
+extern computed_table** cp;
+extern unique_table* ut ;
+//ut->key.left = NULL;
+//ut->key.right = NULL;
+//ut->key.v = '\0';
+//ut->next = NULL;
+
 class BDD {
 	public:
 		BDD();
 		~BDD();
 		BDD& operator=(const BDD & bdd);
 		
+//		computed_table* init_ct();
+//		unique_table* init_ut();
+				
         	void copy(BDDnode *to, BDDnode* from);
 		void build_literal(char v, bool isP);
 		void destroy_BDD(BDDnode* node);

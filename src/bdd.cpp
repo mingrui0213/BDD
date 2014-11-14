@@ -4,18 +4,32 @@
 
 using namespace std;
 
- computed_table* ct = new computed_table;                               
+//ct = new computed_table;
+ 
+static computed_table* init_ct() {                               
+computed_table* ct = new computed_table;
 ct->key.left = NULL;
 ct->key.right = NULL;
 ct->node = NULL;
 ct->next = NULL;
- computed_table** cp = &(ct);
+return ct;
+ }
+ 
+computed_table* ct = init_ct();
+// unique_table* ut = new unique_table;  
+// computed_table** cp = &(ct);
+ 
+ static unique_table* init_ut() {
  unique_table* ut = new unique_table;                                   
 ut->key.left = NULL;                                                          
 ut->key.right = NULL;
 ut->key.v = '\0';
 ut->next = NULL;
+return ut;
 
+ }
+unique_table* ut = init_ut();
+computed_table** cp = &ct;
 BDD::BDD()
 {
 	root = NULL;
@@ -118,14 +132,14 @@ static BDD find_or_add_unique_table(char v, BDD t, BDD e)
 void BDD::insert_computed_table(BDD a, BDD b, BDD r)
 {
 
-	if (*cp->key.left == NULL && *cp->key.right == NULL && *cp->node ==NULL
-		&& *cp->next ==NULL) {
-		*cp->key.left = new BDDnode;
-		*cp->key.right = new BDDnode;
-		*cp->node = new BDDnode; 
-		*cp->key.left=a.root;
-		*cp->key.right = b.root;
-		*cp->node = r.root;
+	if ((*cp)->key.left == NULL && (*cp)->key.right == NULL && (*cp)->node ==NULL
+		&& (*cp)->next ==NULL) {
+		(*cp)->key.left = new BDDnode;
+		(*cp)->key.right = new BDDnode;
+		(*cp)->node = new BDDnode; 
+		(*cp)->key.left=a.root;
+		(*cp)->key.right = b.root;
+		(*cp)->node = r.root;
 	}
 	else { 
 		(*cp)->next = new computed_table;
@@ -220,11 +234,11 @@ BDD BDD:: find_or_add_unique_table(char v, BDD t, BDD e)
 	r.root->right = e.root;
 	r.root->isLeaf = 0;
 	r.root->leaf = 0;
-	computed_table** i=&ut;
-	while ((*i->next)!=NULL){
+	unique_table** i=&ut;
+	while (((*i)->next)!=NULL){
 		if((*i)->key.left ==t.root && (*i)->key.right == e.root
-			&& (*i)->v == v)
-			return *i;
+			&& (*i)->key.v == v)
+			return r;
 		i= &((*i)->next);
 	}
 	(*i)->next = new unique_table;
@@ -251,7 +265,8 @@ BDD BDD::BDD_AND(BDD a, BDD b)
 		return b;
 	else if((isLeaf(b.root)&&b.root->leaf == 1))
 		return a;
-	else if(isLeaf(a.root)==0 && isLeaf(b.root)==0 && *a.root == *b.root)
+	else if(isLeaf(a.root)==0 && isLeaf(b.root)==0 &&
+		 *(a.root) == *(b.root))
 		return a;
 	else {
 		if (computed_table_has_entry (a,b,r))
@@ -277,6 +292,7 @@ BDD BDD::BDD_AND(BDD a, BDD b)
 			insert_computed_table(a,b,r);
 			return r;
 			
-		
+			}		
 }
-	
+
+}
