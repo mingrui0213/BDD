@@ -93,10 +93,11 @@ void BDD::build_literal(char v, bool isP)
 {
 	root = new BDDnode;
 	root->v = v;
+	root->leaf = 0;
 	root->isLeaf = 0;
-	BDDnode *t = new BDDnode;
-	BDDnode *e = new BDDnode;
-	t->leaf = true;
+	BDDnode *t = build_leaf(true);
+	BDDnode *e = build_leaf(false);
+/*	t->leaf = true;
 	t->v = '\0';
 	e->v = '\0';
 	t->isLeaf = true;
@@ -106,7 +107,7 @@ void BDD::build_literal(char v, bool isP)
 	e->leaf = false;
     	e->right = NULL;
 	e->isLeaf = true;
-		
+*/		
 	if (isP == true) {	
 		root->left = t;
 		root->right = e;
@@ -115,6 +116,7 @@ void BDD::build_literal(char v, bool isP)
 		root->right =t;
 	}
 }
+/*
 static BDD find_or_add_unique_table(char v, BDD t, BDD e)
 {
 	// before creating a new node, check first !???
@@ -128,7 +130,7 @@ static BDD find_or_add_unique_table(char v, BDD t, BDD e)
 	return r;
 
 }
-	 
+*/	 
 void BDD::insert_computed_table(BDD a, BDD b, BDD r)
 {
 
@@ -168,7 +170,7 @@ bool BDD::computed_table_has_entry(BDD a,BDD b,BDD r)
 
 bool BDD:: isLeaf(BDDnode* bdd)
 {
-	if(bdd->isLeaf==true && (bdd->leaf==true || bdd->right ==false)){
+	if(bdd->isLeaf==true ){
 	//	cout<<"isLeaf is true, leaf= "<<bdd->leaf<<endl;
 		return true;
 	}
@@ -251,8 +253,24 @@ BDD BDD:: find_or_add_unique_table(char v, BDD t, BDD e)
 	return r;
 
 }
+
+bool BDD::compare(BDDnode* a, BDDnode* b)
+{
+	if (a ==NULL && b==NULL)
+		return true;
+	else if (isLiteral(a) && isLiteral(b) && a->left->leaf == b->left->leaf && a->right->leaf == b->right->leaf)
+		return true;
+	else if (isLeaf(a) && isLeaf(b) &&a->leaf == b->leaf)
+		return true;
+	else if (isLiteral(a) == 0 && isLiteral(b) == 0 && a->v == b->v 
+		&& compare(a->left, b->left)
+		&& compare(a->right,b->right))
+		return true;
+	else
+		return false;
+}
 //a and b have the same level so they become literal at the same time
-BDD BDD::BDD_AND(BDD a, BDD b)
+BDD BDD::BDD_AND(const BDD & a, const BDD &b)
 {
 	BDD r;
 	r.root =new BDDnode;
@@ -266,13 +284,14 @@ BDD BDD::BDD_AND(BDD a, BDD b)
 	else if((isLeaf(b.root)&&b.root->leaf == 1))
 		return a;
 	else if(isLeaf(a.root)==0 && isLeaf(b.root)==0 &&
-		 *(a.root) == *(b.root))
+		 compare(a.root,b.root))
 		return a;
 	else {
-		if (computed_table_has_entry (a,b,r))
-			return r;
-		else {
+//		if (computed_table_has_entry (a,b,r))
+//			return r;
+//		else {
 			char v = a.root->v;
+			
 			BDD a_left, b_left, a_right, b_right;
 			a_left.root = new BDDnode;
 			a_right.root = new BDDnode;
@@ -286,13 +305,23 @@ BDD BDD::BDD_AND(BDD a, BDD b)
 			BDD t = BDD_AND(a_left, b_left);
 			BDD e = BDD_AND(a_right, b_right);
 
-			if ( *t.root == *e.root)
+			if ( compare(t.root,e.root))
 				return t;
-			r=find_or_add_unique_table(v,t,e);
-			insert_computed_table(a,b,r);
+//			r=find_or_add_unique_table(v,t,e);
+//			insert_computed_table(a,b,r);
+		//	BDD tmp;
+		//	r.root = new BDDnode;
+				
+			r.root->v= v;
+			r.root->left = new BDDnode;
+			r.root->right =new BDDnode;
+			r.root->isLeaf =false;
+			r.root->leaf = 0;
+			r.root->left = t.root;
+			r.root->right = e.root;	
 			return r;
 			
-			}		
+//			}		
 }
 
 }
