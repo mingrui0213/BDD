@@ -7,6 +7,12 @@ struct BDDnode {
 	bool isLeaf;
 };
 
+struct computed_table {
+	BDDnode node;
+	BDDnode* next;
+};
+
+
 class BDD {
 	public:
 		BDD();
