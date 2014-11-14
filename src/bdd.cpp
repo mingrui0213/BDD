@@ -6,7 +6,7 @@ using namespace std;
 
 BDD::BDD()
 {
-	root=NULL;
+	root = NULL;
 }
 
 void BDD::destroy_BDD(BDDnode * node)
@@ -62,6 +62,7 @@ BDD& BDD::operator=(const BDD & bdd)
     }
 }
 
+// isP means is Positive
 void BDD::build_literal(char v, bool isP)
 {
 	root = new BDDnode;
@@ -74,11 +75,18 @@ void BDD::build_literal(char v, bool isP)
 	e->v = '\0';
 	t->isLeaf = true;
 	t->left = NULL;
+<<<<<<< HEAD
 	t->right = NULL;
 	e->left = NULL;
 	t->right = NULL;
 	e->leaf = false;
+=======
+    t->right = NULL;
+    e->leaf = false;
+>>>>>>> 9b4491d6150333688287385b87a53e13a1c79e15
 	e->isLeaf = true;
+    e->left = NULL;
+    e->right = NULL;
 		
 	if (isP == true) {	
 		root->left = t;
