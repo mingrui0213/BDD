@@ -21,7 +21,7 @@ class BDD {
 		bool isLiteral(BDDnode* bdd);
 
 		BDDnode* build_leaf(bool leaf);
-		BDDnode* literal_and(BDD a, BDD b);
+		BDD literal_and(BDD a, BDD b);
 
 		BDD BDD_OR(BDD a, BDD b);
 		BDD BDD_AND(BDD a, BDD b);

@@ -75,18 +75,11 @@ void BDD::build_literal(char v, bool isP)
 	e->v = '\0';
 	t->isLeaf = true;
 	t->left = NULL;
-<<<<<<< HEAD
 	t->right = NULL;
 	e->left = NULL;
-	t->right = NULL;
 	e->leaf = false;
-=======
-    t->right = NULL;
-    e->leaf = false;
->>>>>>> 9b4491d6150333688287385b87a53e13a1c79e15
+    	e->right = NULL;
 	e->isLeaf = true;
-    e->left = NULL;
-    e->right = NULL;
 		
 	if (isP == true) {	
 		root->left = t;
@@ -123,17 +116,24 @@ static bool computed_table_has_entry(BDD a,BDD b,BDD r)
 
 bool BDD:: isLeaf(BDDnode* bdd)
 {
-	if(bdd!= NULL  && bdd->isLeaf==1)
+	if(bdd->isLeaf==true && (bdd->leaf==true || bdd->right ==false)){
+	//	cout<<"isLeaf is true, leaf= "<<bdd->leaf<<endl;
 		return true;
+	}
 	else
 		return false;
 }
 
-bool BDD::isLiteral(BDD bdd)
+bool BDD::isLiteral(BDDnode* bdd)
 {
-	if(bdd.root!=NULL && bdd.root->isLeaf == 0 && isLeaf(bdd.root->left)
-		&& isLeaf(bdd.root->right))
+	if(bdd->isLeaf == false && isLeaf(bdd->left)==true
+		&& isLeaf(bdd->right)==true)
+	{
+	//	cout<<"isLiteral left leaf = "<<bdd.root->left->leaf<<endl;
+	//	cout<<"isLiteral right leaf = "<<bdd.root->right->leaf<<endl;
+
 		return true;
+	}
 	else
 		return false;
 }
@@ -151,24 +151,24 @@ BDDnode* BDD::build_leaf(bool leaf)
 }
 
 //inputs are literal BDD and top variable are the same
-BDDnode* BDD:: literal_and(BDD a, BDD b)
+BDD BDD:: literal_and(BDD a, BDD b)
 {
-	BDDnode* r;
+	BDD r;
 	BDDnode* left = new BDDnode;
 	BDDnode* right = new BDDnode;
 
-	r = new BDDnode;
-	r->v = a.root->v;
-	r->isLeaf = 0;
-	r->leaf = 0;
+	r.root = new BDDnode;
+	r.root->v = a.root->v;
+	r.root->isLeaf = 0;
+	r.root->leaf = 0;
 
 	left= build_leaf(a.root->left->leaf & b.root->left->leaf);
 	right=build_leaf(a.root->right->leaf & b.root->right->leaf);
 //	bool d= isLeaf(left);
 //	cout<<d;
 
-	r->left= left;
-	r->right = right;
+	r.root->left= left;
+	r.root->right = right;
 
 	return r;
 }
@@ -178,8 +178,8 @@ BDD BDD::BDD_AND(BDD a, BDD b)
 {
 	BDD r;
 	r.root =new BDDnode;
-	if (isLiteral(a) && isLiteral(b)){
-		 r.root = literal_and(a,b);
+	if (isLiteral(a.root) && isLiteral(b.root)){
+		 r = literal_and(a,b);
 		 return r;
 	}
 	else {
