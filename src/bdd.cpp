@@ -258,8 +258,12 @@ bool BDD::compare(BDDnode* a, BDDnode* b)
 {
 	if (a ==NULL && b==NULL)
 		return true;
-	else if (isLiteral(a) && isLiteral(b) && a->left->leaf == b->left->leaf && a->right->leaf == b->right->leaf)
+	else if (isLiteral(a) && isLiteral(b) && a->left->leaf == b->left->leaf && a->right->leaf == b->right->leaf){
+		cout<<"literal a and b are the same"<<endl;
+		cout<<"literal a left leaf "<<a->left->leaf<<endl;
+		cout<<"literal b left leaf "<<b->left->leaf<<endl;
 		return true;
+	}
 	else if (isLeaf(a) && isLeaf(b) &&a->leaf == b->leaf)
 		return true;
 	else if (isLiteral(a) == 0 && isLiteral(b) == 0 && a->v == b->v 
