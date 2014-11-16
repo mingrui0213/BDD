@@ -25,40 +25,30 @@ int main()
     cout<<"bdd b var is "<<bddb.root->v<<endl;
  	cout<<"\n"<<endl;
 	cout<<bdda.root->left->leaf<<endl;
-//	BDDnode* l = bdda.build_leaf(bdda.root->left->leaf & bddb.root->left->leaf);
-//	bool lb = bdda.isLiteral(bdda.root);  
 
-// 	cout<<"lb = "<<lb<<endl;
-	if(bdda.isLiteral(bdda.root)){
-	//	cout<<bddb.root->right->leaf<<endl;
-	//	cout<<bdda.root->left->leaf<<endl;
-	        cout<<"bdda is a literal"<<endl;}
+	if (bdda.isLiteral(bdda.root))
+	        cout<<"bdda is a literal"<<endl;
 	else
 		cout<<"bdd a is not a literal"<<endl;
-//	cout<<bddb.root->left->leaf<<endl;
-	if(bddb.isLiteral(bddb.root)){
-	//	cout<<bdda.root->left->leaf<<endl;
+
+	if (bddb.isLiteral(bddb.root)) {
 		cout<<"bddb is a literal" <<endl;
 	}
 	else
 		cout<<"bddb is not a literal\n"<<endl;
-//	cout<<bdda.root->left->leaf<<endl;	
-//	bool e=(bdda.root->left->leaf); //& bddb.root->left->leaf);
-//	cout<<e<<endl;
 
-	BDD c = bdda.literal_and(bdda,bddb);
-//	bool d = bdda.isLiteral(c.root);
-//	cout<<d<<endl;
+	//BDD c = bdda.literal_and(bdda,bddb);
 
-	if(c.isLiteral(c.root)){
+	/*if(c.isLiteral(c.root)){
 		cout<<"c is a literal"<<endl;
 		cout<<"literal_and(bdda,bddb) c->root"<<endl;
 		cout<<"c->root->v "<<c.root->v<<endl;
 		cout<<"c->root->left "<<c.root->left->leaf<<endl;
 		cout<<"c->root->right "<<c.root->right->leaf<<endl;
-	}     
-    BDDnode *t = bdda.root;
+	}*/
+    BDDnode*t = bdda.root;
     cout<<bdda.compare(bdda.root, t);
+    cout << "PASS THE COMPARE CHECKPOINT" << endl;
     BDD r = bdda.BDD_AND(bdda,bddb);
     cout<<"\nbdd_and(a, b) =r"<<endl;
     cout<<"r->root->v = "<<r.root->v<<endl;

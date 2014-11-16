@@ -61,6 +61,7 @@ class BDD {
 		
 		bool isLeaf(BDDnode* bdd);	
 		bool isLiteral(BDDnode* bdd);
+        bool isBig(BDDnode* bdd);
 
 		BDDnode* build_leaf(bool leaf);
 		BDD literal_and(BDD a, BDD b);

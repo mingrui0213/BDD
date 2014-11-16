@@ -97,18 +97,8 @@ void BDD::build_literal(char v, bool isP)
 	root->isLeaf = 0;
 	BDDnode *t = build_leaf(true);
 	BDDnode *e = build_leaf(false);
-/*	t->leaf = true;
-	t->v = '\0';
-	e->v = '\0';
-	t->isLeaf = true;
-	t->left = NULL;
-	t->right = NULL;
-	e->left = NULL;
-	e->leaf = false;
-    	e->right = NULL;
-	e->isLeaf = true;
-*/		
-	if (isP == true) {	
+	
+    if (isP == true) {	
 		root->left = t;
 		root->right = e;
 	} else {
@@ -168,44 +158,44 @@ bool BDD::computed_table_has_entry(BDD a,BDD b,BDD r)
 	return false;
 }
 
-bool BDD:: isLeaf(BDDnode* bdd)
+bool BDD::isLeaf(BDDnode* bdd)
 {
-	if(bdd->isLeaf==true ){
-	//	cout<<"isLeaf is true, leaf= "<<bdd->leaf<<endl;
-		return true;
-	}
-	else
-		return false;
+    if (bdd == NULL) 
+        return false;
+    else
+        return bdd->isLeaf;
 }
 
 bool BDD::isLiteral(BDDnode* bdd)
 {
-	if(bdd->isLeaf == false && isLeaf(bdd->left)==true
-		&& isLeaf(bdd->right)==true)
-	{
-	//	cout<<"isLiteral left leaf = "<<bdd.root->left->leaf<<endl;
-	//	cout<<"isLiteral right leaf = "<<bdd.root->right->leaf<<endl;
+	if (bdd == NULL)
+        return false;
+    else
+        return (!bdd->isLeaf) && isLeaf(bdd->left) && isLeaf(bdd->right);
+}
 
-		return true;
-	}
-	else
-		return false;
+bool BDD::isBig(BDDnode* bdd)
+{
+    if (bdd == NULL)
+        return false;
+    else
+        return (!isLeaf(bdd)) && (!isLiteral(bdd));
 }
 
 BDDnode* BDD::build_leaf(bool leaf)
 {
-	BDDnode *r = new BDDnode;
+	BDDnode* r = new BDDnode;
 	r->leaf = leaf;
 	r->v = '\0';
 	r->left = NULL;
 	r->right = NULL;
-	r->isLeaf = 1;
+	r->isLeaf = true;
 
 	return r;
 }
 
 //inputs are literal BDD and top variable are the same
-BDD BDD:: literal_and(BDD a, BDD b)
+BDD BDD::literal_and(BDD a, BDD b)
 {
 	BDD r;
 	BDDnode* left = new BDDnode;
@@ -256,6 +246,24 @@ BDD BDD:: find_or_add_unique_table(char v, BDD t, BDD e)
 
 bool BDD::compare(BDDnode* a, BDDnode* b)
 {
+	if (a == NULL && b == NULL)
+		return true;
+	else if (isLeaf(a) && isLeaf(b))
+        return a->leaf == b->leaf; // compare two leaves nodes
+	else if (isBig(a) && isBig(b))
+        return (a->v == b->v &&
+		        compare(a->left, b->left) &&
+		        compare(a->right,b->right)); // compare two big nodes
+	else if (isLiteral(a) && isLiteral(b))
+        return (a->v == b->v &&
+                a->left->leaf == b->left->leaf &&
+                a->right->leaf == b->right->leaf); // compare two literals
+    else
+		return false;
+}
+
+/*bool BDD::compare(BDDnode* a, BDDnode* b)
+{
 	if (a ==NULL && b==NULL)
 		return true;
 	else if (isLiteral(a) && isLiteral(b) && a->left->leaf == b->left->leaf && a->right->leaf == b->right->leaf){
@@ -272,24 +280,25 @@ bool BDD::compare(BDDnode* a, BDDnode* b)
 		return true;
 	else
 		return false;
-}
+}*/
+
 //a and b have the same level so they become literal at the same time
 BDD BDD::BDD_AND(const BDD & a, const BDD &b)
 {
 	BDD r;
 	r.root =new BDDnode;
-	if ((isLeaf(a.root)&&a.root->leaf==0) ||
-		( isLeaf(b.root)&&b.root->leaf==0)){
-		 r.root=build_leaf(false);
-		 return r;
-	}
-	else if((isLeaf(a.root)&&a.root->leaf ==1))
-		return b;
-	else if((isLeaf(b.root)&&b.root->leaf == 1))
-		return a;
-	else if(isLeaf(a.root)==0 && isLeaf(b.root)==0 &&
-		 compare(a.root,b.root))
-		return a;
+    if (a.root == NULL || b.root == NULL)
+        return r;
+    else if (isLeaf(a.root) && isLeaf(b.root)) {
+        if (a.root->leaf == 0 || b.root->leaf == 0)
+            r.root = build_leaf(false);
+    }
+	else if ((isLeaf(a.root) && a.root->leaf))
+		r = b;
+	else if ((isLeaf(b.root) && b.root->leaf))
+		r = a;
+	else if (compare(a.root,b.root))
+		r = a;
 	else {
 //		if (computed_table_has_entry (a,b,r))
 //			return r;
@@ -323,9 +332,9 @@ BDD BDD::BDD_AND(const BDD & a, const BDD &b)
 			r.root->leaf = 0;
 			r.root->left = t.root;
 			r.root->right = e.root;	
-			return r;
 			
 //			}		
-}
+    }
+    return r;
 
 }
