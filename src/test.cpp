@@ -13,20 +13,21 @@ int main()
     test.build_analyze(s);
 
 
-    BDD bdda,bddb;
-    bdda.build_literal('a',true);
-    cout<<"bdd a left leaf is "<<bdda.root->left->leaf<<endl;
-    cout<<"bdd a right leaf is "<<bdda.root->right->leaf<<endl;
-    cout<<"bdd a var is "<<bdda.root->v<<endl;
+    BDD* bdda = new BDD;
+    BDD* bddb = new BDD;
+    bdda->build_literal('a',true);
+    //cout<<"bdd a left leaf is "<<bdda.root->left->leaf<<endl;
+    //cout<<"bdd a right leaf is "<<bdda.root->right->leaf<<endl;
+    //cout<<"bdd a var is "<<bdda.root->v<<endl;
     
-    bddb.build_literal('a',false);
-    cout<<"bdd b left leaf is "<<bddb.root->left->leaf<<endl;
-    cout<<"bdd b right leaf is "<<bddb.root->right->leaf<<endl;
-    cout<<"bdd b var is "<<bddb.root->v<<endl;
- 	cout<<"\n"<<endl;
-	cout<<bdda.root->left->leaf<<endl;
+    bddb->build_literal('a',false);
+    //cout<<"bdd b left leaf is "<<bddb.root->left->leaf<<endl;
+    //cout<<"bdd b right leaf is "<<bddb.root->right->leaf<<endl;
+    //cout<<"bdd b var is "<<bddb.root->v<<endl;
+ 	//cout<<"\n"<<endl;
+	//cout<<bdda.root->left->leaf<<endl;
 
-	if (bdda.isLiteral(bdda.root))
+	/*if (bdda.isLiteral(bdda.root))
 	        cout<<"bdda is a literal"<<endl;
 	else
 		cout<<"bdd a is not a literal"<<endl;
@@ -35,7 +36,7 @@ int main()
 		cout<<"bddb is a literal" <<endl;
 	}
 	else
-		cout<<"bddb is not a literal\n"<<endl;
+		cout<<"bddb is not a literal\n"<<endl;*/
 
 	//BDD c = bdda.literal_and(bdda,bddb);
 
@@ -46,13 +47,12 @@ int main()
 		cout<<"c->root->left "<<c.root->left->leaf<<endl;
 		cout<<"c->root->right "<<c.root->right->leaf<<endl;
 	}*/
-    BDDnode*t = bdda.root;
-    cout<<bdda.compare(bdda.root, t);
+    BDDnode*t = bdda->root;
+    cout<<bdda->compare(bdda->root, t) << endl;
     cout << "PASS THE COMPARE CHECKPOINT" << endl;
-    BDD r = bdda.BDD_AND(bdda,bddb);
+    BDD* r = new BDD;
+    *r = r->BDD_AND(*bdda,*bddb);
     cout<<"\nbdd_and(a, b) =r"<<endl;
-    cout<<"r->root->v = "<<r.root->v<<endl;
-    cout<<"r->root->left->leaf "<<r.root->left->leaf<<endl;
-    cout<<"r->root->right->leaf"<<r.root->right->leaf<<endl;  
+    cout<<"r->root->leaf \t"<<r->root->leaf<<endl;
     return 0;
 }
