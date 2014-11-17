@@ -1,58 +1,61 @@
-
 #include <iostream>
 #include "cnf.h"
-#include "bdd.h"
-
+#include <queue>
 using namespace std;
 
+void print (BDD* bdd)
+{
+	if (bdd->root == NULL) 
+		return;
+	if (bdd->root->isLeaf)
+		return;
+	queue<BDDnode* > nodesQueue;
+	int nodeInCurrentLevel = 1;
+	int nodeInNextLevel = 0;
+	nodesQueue.push(bdd->root);
+	while (!nodesQueue.empty()) {
+		BDDnode *curBDD = nodesQueue.front();
+		nodesQueue.pop();
+		nodeInCurrentLevel --;
+		if (curBDD) {
+			cout<<curBDD->v<<" ";
+			nodesQueue.push(curBDD->left);
+			nodesQueue.push(curBDD->right);
+			nodeInNextLevel +=2;
+		}
+		if (nodeInCurrentLevel ==0) {
+			cout<<endl;
+			nodeInCurrentLevel = nodeInNextLevel;
+			nodeInNextLevel = 0;
+		}
+	}
+	
+}
+
+	
 int main()
 {
-    CNF test;
+//    CNF test(s);
     string s = "(a+b+c+a+c'+b+c'+d)(a+e+d)(b'+d')(z+k+f)";
-
+    CNF test;
     test.build_analyze(s);
-
-
+    
     BDD* bdda = new BDD;
     BDD* bddb = new BDD;
     bdda->build_literal('a',true);
-    //cout<<"bdd a left leaf is "<<bdda.root->left->leaf<<endl;
-    //cout<<"bdd a right leaf is "<<bdda.root->right->leaf<<endl;
-    //cout<<"bdd a var is "<<bdda.root->v<<endl;
     
-    bddb->build_literal('a',false);
-    //cout<<"bdd b left leaf is "<<bddb.root->left->leaf<<endl;
-    //cout<<"bdd b right leaf is "<<bddb.root->right->leaf<<endl;
-    //cout<<"bdd b var is "<<bddb.root->v<<endl;
- 	//cout<<"\n"<<endl;
-	//cout<<bdda.root->left->leaf<<endl;
+    bddb->build_literal('b',true);
 
-	/*if (bdda.isLiteral(bdda.root))
-	        cout<<"bdda is a literal"<<endl;
-	else
-		cout<<"bdd a is not a literal"<<endl;
-
-	if (bddb.isLiteral(bddb.root)) {
-		cout<<"bddb is a literal" <<endl;
-	}
-	else
-		cout<<"bddb is not a literal\n"<<endl;*/
-
-	//BDD c = bdda.literal_and(bdda,bddb);
-
-	/*if(c.isLiteral(c.root)){
-		cout<<"c is a literal"<<endl;
-		cout<<"literal_and(bdda,bddb) c->root"<<endl;
-		cout<<"c->root->v "<<c.root->v<<endl;
-		cout<<"c->root->left "<<c.root->left->leaf<<endl;
-		cout<<"c->root->right "<<c.root->right->leaf<<endl;
-	}*/
-    BDDnode*t = bdda->root;
-    cout<<bdda->compare(bdda->root, t) << endl;
-    cout << "PASS THE COMPARE CHECKPOINT" << endl;
+	cout<<bdda->top_var(*bdda, *bddb);
+   
     BDD* r = new BDD;
     *r = r->BDD_AND(*bdda,*bddb);
-    cout<<"\nbdd_and(a, b) =r"<<endl;
-    cout<<"r->root->leaf \t"<<r->root->leaf<<endl;
+    cout<<"\n---------bdd_and result--------"<<endl;
+    BDD* bddc = new BDD;
+    bddc->build_literal('c',false); 
+    BDD * r2 = new BDD;
+    *r2 = r->BDD_AND(*r,*bddc);
+    print(r2);
+
     return 0;
 }

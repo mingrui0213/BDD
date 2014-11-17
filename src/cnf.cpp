@@ -5,6 +5,40 @@
 
 using namespace std;
 
+CNF::CNF(string s)
+{
+//	get_clause(s);
+//	parse_clause();
+	build_analyze(s);
+	alphabetical_var_order();
+}
+
+CNF :: CNF()
+{
+
+}
+
+CNF::~CNF()
+{
+	clear();
+}
+
+CNF& CNF::operator = (const CNF& cnf)
+{
+	if (this!= &cnf){
+		clear();
+		this->clause=cnf.clause;
+		this->var = cnf.var;
+		this->var_order = cnf.var_order;
+		this->cv_table = cnf.cv_table;
+		return *this;
+	}
+
+	else
+		return *this;
+}
+
+
 void CNF::get_clause(string s)
 {
     cout << "original string: " << s << endl;
@@ -208,7 +242,7 @@ void CNF::static_var_order()
                 freq_count[i] = tmp;
                 swapped = true;
             }
-        }
+	}     
     }
     for (int i = 0; i < num_var; i++)
         var_order.push_back(freq_count[i].first);
@@ -224,3 +258,5 @@ void CNF::dyn_var_order()
 
 }
 
+
+                                                                                   

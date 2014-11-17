@@ -1,12 +1,18 @@
 
 #include <string>
 #include <vector>
+#include "bdd.h"
 
 using namespace std;
 
 class CNF {
 
     public:
+	
+	CNF();
+	CNF(string s);
+	~CNF();
+	CNF& operator=(const CNF &cnf);
 
         void build_analyze(string s);
         void clear();
@@ -15,8 +21,9 @@ class CNF {
 
         int get_num_var();
 
-    private:
-        
+	BDD& get_BDD(CNF cnf);
+    
+    private:        
         void get_clause(string s);
         void parse_clause();
         void fill_table();

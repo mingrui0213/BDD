@@ -1,18 +1,19 @@
 #include <iostream>
-
-#include "bdd.h"
+#include "cnf.h"
+//#include "bdd.h"
 
 using namespace std;
 
 //ct = new computed_table;
  
+//create a new space for ct 
 static computed_table* init_ct() {                               
-computed_table* ct = new computed_table;
-ct->key.left = NULL;
-ct->key.right = NULL;
-ct->node = NULL;
-ct->next = NULL;
-return ct;
+	computed_table* ct = new computed_table;
+	ct->key.left = NULL;
+	ct->key.right = NULL;
+	ct->node = NULL;
+	ct->next = NULL;
+	return ct;
  }
  
 computed_table* ct = init_ct();
@@ -33,11 +34,13 @@ computed_table** cp = &ct;
 BDD::BDD()
 {
 	root = NULL;
+//	cnf('\0');
 }
 
 void BDD::destroy_BDD(BDDnode * node)
 {
 	if (node != NULL) {
+	//	delete node;
 		destroy_BDD(node->left);
 		destroy_BDD(node->right);
 		delete node;
@@ -49,7 +52,6 @@ BDD::~BDD()
 {
 	destroy_BDD(root);
 }
-
 // assume to is not NULL, to->left is NULL, to->right is NULL
 void BDD::copy(BDDnode *to, BDDnode *from)
 {
@@ -120,25 +122,27 @@ static BDD find_or_add_unique_table(char v, BDD t, BDD e)
 	return r;
 
 }
-*/	 
-void BDD::insert_computed_table(BDD a, BDD b, BDD r)
+*/
+
+static bool ct_isEmpty (computed_table t)
+{
+	if (t.node == NULL && t.key.left ==NULL && t.key.right ==NULL 
+		&& t.next == NULL)
+		return true;
+	else 
+		return false;
+}
+	 
+void BDD::insert_computed_table(const BDD &a, const BDD &b, BDD &r)
 {
 
-	if ((*cp)->key.left == NULL && (*cp)->key.right == NULL && (*cp)->node ==NULL
-		&& (*cp)->next ==NULL) {
-		(*cp)->key.left = new BDDnode;
-		(*cp)->key.right = new BDDnode;
-		(*cp)->node = new BDDnode; 
-		(*cp)->key.left=a.root;
-		(*cp)->key.right = b.root;
-		(*cp)->node = r.root;
+	if (ct_isEmpty(*ct)) { 
+		ct->key.left=a.root;
+		ct->key.right = b.root;
+		ct->node = r.root;
 	}
 	else { 
-		(*cp)->next = new computed_table;
-		(*cp)->next->key.left = new BDDnode;
-		(*cp)->next->key.right = new BDDnode;
-		(*cp)->next->node = new BDDnode;
-		(*cp)->next->next =NULL;
+		(*cp)->next = init_ct();  //create  space for next ct		
 		(*cp)->next->key.left = a.root;
 		(*cp)->next->key.right = b.root;
 		(*cp)->next->node = r.root;
@@ -146,7 +150,7 @@ void BDD::insert_computed_table(BDD a, BDD b, BDD r)
 	}
 }
 
-bool BDD::computed_table_has_entry(BDD a,BDD b,BDD r)
+bool BDD::computed_table_has_entry(const BDD &a, const BDD & b,BDD &r)
 {
 	computed_table** i = &(ct);
 	while (*i!=NULL ) {
@@ -217,30 +221,30 @@ BDD BDD::literal_and(BDD a, BDD b)
 	return r;
 }
 
-BDD BDD:: find_or_add_unique_table(char v, BDD t, BDD e)
+BDD& BDD:: find_or_add_unique_table(char v, const BDD &t, const BDD &e)
 {
-	BDD r;
-	r.root = new BDDnode;
-	r.root->v = v;
-	r.root->left = t.root;
-	r.root->right = e.root;
-	r.root->isLeaf = 0;
-	r.root->leaf = 0;
+	BDD* r= new BDD;
+	r->root = new BDDnode;
+	r->root->v = v;
+	r->root->left = t.root;
+	r->root->right = e.root;
+	r->root->isLeaf = 0;
+	r->root->leaf = 0;
 	unique_table** i=&ut;
 	while (((*i)->next)!=NULL){
 		if((*i)->key.left ==t.root && (*i)->key.right == e.root
 			&& (*i)->key.v == v)
-			return r;
+			return *r;
 		i= &((*i)->next);
 	}
-	(*i)->next = new unique_table;
-	(*i)->next->key.left = new BDDnode;
+	(*i)->next = init_ut();
+//	(*i)->next->key.left = new BDDnode;
 	(*i)->next->key.left = t.root;
-	(*i)->next->key.right = new BDDnode;
+//	(*i)->next->key.right = new BDDnode;
 	(*i)->next->key.right = e.root;
 	(*i)->next->key.v = v;
 	(*i)->next->next = NULL;
-	return r;
+	return *r;
 
 }
 
@@ -282,6 +286,35 @@ bool BDD::compare(BDDnode* a, BDDnode* b)
 		return false;
 }*/
 
+
+//without order	
+char& BDD::top_var(const BDD& a, const BDD& b)
+{
+	if (a.root == NULL && b.root == NULL) {
+		cout<< "a and b are empty\n";
+		char *r = new char;
+		*r = '\0';
+		return *r;
+	}
+	char *top1 =new char;
+	char *top2 = new char;
+	*top1 = a.root->v;
+	*top2 = b.root->v;
+	if (a.root->v != '\0' && b.root->v != '\0') {
+		if (strcmp(top1, top2)<=0)
+			return *top1;
+		else
+			return *top2;	
+	 }
+	 else if (a.root->v != '\0' && b.root->v == '\0')
+		 return a.root->v;
+	else if (a.root->v == '\0' && b.root->v != '\0')
+		return b.root->v;
+	else 
+		return *top1;
+}	
+
+
 //a and b have the same level so they become literal at the same time
 BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 {
@@ -301,91 +334,59 @@ BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 	else if (compare(a.root,b.root))
 		*r = a;
 	else {
-//		if (computed_table_has_entry (a,b,r))
-//			return r;
-//		else {
-
-            char v = a.root->v;
+		if (computed_table_has_entry (a,b,*r))
+			return *r;
+		else {
+			//check order
 			
-			BDD a_left, b_left, a_right, b_right;
-			a_left.root = a.root->left;
-			b_left.root = b.root->left;
-			a_right.root = a.root->right;
-			b_right.root = b.root->right;
+		        char v = top_var(a,b);
+			
+			BDD* a_left = new BDD;
+			BDD*  b_left = new BDD;
+			BDD*  a_right = new BDD;
+			BDD*  b_right = new BDD;
+	
+			if (a.root->v == b.root->v) {
+			a_left->root = a.root->left;
+			b_left->root = b.root->left;
+			a_right->root = a.root->right;
+			b_right->root = b.root->right;
+			}
+
+			else {
+				if (v==a.root->v) {
+					a_left->root = a.root->left;
+					a_right->root = a.root->right;
+					b_left->root = b.root;
+					b_right->root = b.root;
+				}
+
+				else if (v==b.root->v) {
+					a_left->root = a.root;
+					a_right->root = a.root;
+					b_left->root =b.root->left;
+					b_right->root = b.root->right;
+				}
+			}
+
 
 			BDD* t = new BDD;
-            *t = BDD_AND(a_left, b_left);
+            		*t = BDD_AND(*a_left, *b_left);
 			BDD* e = new BDD;
-            *e = BDD_AND(a_right, b_right);
-
-			if (compare(t->root,e->root))
-				return *t;
-//			r=find_or_add_unique_table(v,t,e);
-//			insert_computed_table(a,b,r);
-		//	BDD tmp;
+            		*e = BDD_AND(*a_right, *b_right);
 			
-            r->root = new BDDnode;
+		//	if (compare(t->root,e->root))
+		//		return *t;
+			
+			
+			*r=find_or_add_unique_table(v,*t,*e);
+			insert_computed_table(a,b,*r);
+			
 				
-			r->root->v= v;
-			r->root->isLeaf =false;
-			r->root->leaf = 0;
-			r->root->left = t->root;
-			r->root->right = e->root;	
-			
-//			}		
+			}		
     }
     return *r;
 
 }
-/*
-//a and b have the same level so they become literal at the same time
-BDD BDD::BDD_AND(const BDD & a, const BDD &b)
-{
-	BDD r;
-    if (a.root == NULL || b.root == NULL)
-        return r;
-    else if (isLeaf(a.root) && isLeaf(b.root)) {
-        if (a.root->leaf == 0 || b.root->leaf == 0)
-            r.root = build_leaf(false);
-    }
-	else if ((isLeaf(a.root) && a.root->leaf))
-		r = b;
-	else if ((isLeaf(b.root) && b.root->leaf))
-		r = a;
-	else if (compare(a.root,b.root))
-		r = a;
-	else {
-//		if (computed_table_has_entry (a,b,r))
-//			return r;
-//		else {
 
-            char v = a.root->v;
-			
-			BDD a_left, b_left, a_right, b_right;
-			a_left.root = a.root->left;
-			b_left.root = b.root->left;
-			a_right.root = a.root->right;
-			b_right.root = b.root->right;
-
-			BDD t = BDD_AND(a_left, b_left);
-			BDD e = BDD_AND(a_right, b_right);
-
-			if (compare(t.root,e.root))
-				return t;
-//			r=find_or_add_unique_table(v,t,e);
-//			insert_computed_table(a,b,r);
-		//	BDD tmp;
-			
-            r.root = new BDDnode;
 				
-			r.root->v= v;
-			r.root->isLeaf =false;
-			r.root->leaf = 0;
-			r.root->left = t.root;
-			r.root->right = e.root;	
-			
-//			}		
-    }
-    return r;
-
-}*/

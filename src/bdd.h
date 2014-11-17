@@ -61,20 +61,22 @@ class BDD {
 		
 		bool isLeaf(BDDnode* bdd);	
 		bool isLiteral(BDDnode* bdd);
-        bool isBig(BDDnode* bdd);
+	        bool isBig(BDDnode* bdd);
 
 		BDDnode* build_leaf(bool leaf);
 		BDD literal_and(BDD a, BDD b);
 		bool compare(BDDnode* a, BDDnode* b);
-		void insert_computed_table(BDD a, BDD b, BDD r);
-		bool computed_table_has_entry(BDD a, BDD b, BDD r);
-		BDD find_or_add_unique_table(char v, BDD t, BDD e);
+		void insert_computed_table(const BDD& a, const BDD& b, BDD& r);
+		bool computed_table_has_entry(const BDD &a, const BDD &b, BDD &r);
+		BDD& find_or_add_unique_table(char v, const BDD &t, const BDD &e);
 			
+		char& top_var(const BDD& a, const BDD& b);
+		BDD& sub_BDD(const BDD& bdd, char v, char LR);
 
 		BDD BDD_OR(const BDD &a, const BDD &b);
 		BDD& BDD_AND(const BDD &a, const BDD &b);
 
 //	private:
 		BDDnode* root;
-
+//		CNF cnf(string s);
 };
