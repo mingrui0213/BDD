@@ -109,21 +109,7 @@ void BDD::build_literal(char v, bool isP)
 		root->right =t;
 	}
 }
-/*
-static BDD find_or_add_unique_table(char v, BDD t, BDD e)
-{
-	// before creating a new node, check first !???
-	BDD r;
-	r.root = new BDDnode;
-	r.root->v = v;
-	r.root->left = t.root;	
-	r.root->right = e.root;
-	r.root->leaf = 0;
-	r.root->isLeaf = 0;
-	return r;
 
-}
-*/
 
 static bool ct_isEmpty (computed_table t)
 {
@@ -294,7 +280,6 @@ char& BDD::top_var(const BDD& a, const BDD& b)
 		return *top1;
 }	
 
-//a and b have the same level so they become literal at the same time
 BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 {
 	BDD* r = new BDD;

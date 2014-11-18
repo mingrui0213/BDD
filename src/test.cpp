@@ -15,10 +15,14 @@ void print (BDD* bdd)
 	nodesQueue.push(bdd->root);
 	while (!nodesQueue.empty()) {
 		BDDnode *curBDD = nodesQueue.front();
+		
 		nodesQueue.pop();
 		nodeInCurrentLevel --;
 		if (curBDD) {
-			cout<<curBDD->v<<" ";
+			if(!curBDD->isLeaf)
+				cout<<curBDD->v<<" ";
+			else
+				cout<<curBDD->leaf<<" ";
 			nodesQueue.push(curBDD->left);
 			nodesQueue.push(curBDD->right);
 			nodeInNextLevel +=2;
