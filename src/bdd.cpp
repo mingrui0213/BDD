@@ -339,8 +339,8 @@ BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 			BDD* e = new BDD;
             		*e = BDD_AND(*a_right, *b_right);
 			
-		//	if (compare(t->root,e->root))
-		//		return *t;
+			if (compare(t->root,e->root))
+				return *t;
 			
 			
 			*r=find_or_add_unique_table(v,*t,*e);
