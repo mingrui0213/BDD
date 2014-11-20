@@ -50,7 +50,7 @@ int main()
     bddb->build_literal('b',true);
 
 //	cout<<bdda->top_var(*bdda, *bddb);
-    cout <<"\nbdda is a true litera\nbddb is a true literal\nbddc is a false literal\n"; 
+    cout <<"\nbdda is a true literal\nbddb is a true literal\nbddc is a false literal\n"; 
     BDD* r = new BDD;
     *r = r->BDD_AND(*bdda,*bddb);
     BDD* r1 = new BDD;

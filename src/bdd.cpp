@@ -1,10 +1,8 @@
 #include <iostream>
 #include "cnf.h"
-//#include "bdd.h"
+#include "bdd.h"
 
 using namespace std;
-
-//ct = new computed_table;
  
 //create a new space for ct 
 static computed_table* init_ct() {                               
@@ -17,30 +15,26 @@ static computed_table* init_ct() {
  }
  
 computed_table* ct = init_ct();
-// unique_table* ut = new unique_table;  
-// computed_table** cp = &(ct);
- 
- static unique_table* init_ut() {
- unique_table* ut = new unique_table;                                   
-ut->key.left = NULL;                                                          
-ut->key.right = NULL;
-ut->key.v = '\0';
-ut->next = NULL;
-return ut;
 
- }
-unique_table* ut = init_ut();
+/*ut_head = new unique_table_entry;
+    ut->key.left = NULL;
+    ut->key.right = NULL;
+    ut->key.v = '\0';
+    ut->next = NULL;
+    return ut;
+}*/
 computed_table** cp = &ct;
+
+
 BDD::BDD()
 {
 	root = NULL;
-//	cnf('\0');
+    ut_head = NULL;    
 }
 
 void BDD::destroy_BDD(BDDnode * node)
 {
 	if (node != NULL) {
-	//	delete node;
 		destroy_BDD(node->left);
 		destroy_BDD(node->right);
 		delete node;
@@ -51,6 +45,12 @@ void BDD::destroy_BDD(BDDnode * node)
 BDD::~BDD()
 {
 	destroy_BDD(root);
+    destroy_ut();
+}
+
+void BDD::destroy_ut()
+{
+    // TO BE WRITTEN
 }
 
 // assume to is not NULL, to->left is NULL, to->right is NULL
@@ -85,10 +85,17 @@ BDD& BDD::operator=(const BDD & bdd)
 		destroy_BDD(root);
 		root = new BDDnode;
 		copy(this->root, bdd.root);
-		return *this;
+		destroy_ut();
+        build_ut();
+        return *this;
 	} else {
 		return *this;
     }
+}
+
+void BDD::build_ut()
+{
+    // TO BE WRITTEN
 }
 
 // isP means is Positive
@@ -109,7 +116,6 @@ void BDD::build_literal(char v, bool isP)
 		root->right =t;
 	}
 }
-
 
 static bool ct_isEmpty (computed_table t)
 {
@@ -208,7 +214,42 @@ BDD BDD::literal_and(BDD a, BDD b)
 	return r;
 }
 
-BDD& BDD:: find_or_add_unique_table(char v, const BDD &t, const BDD &e)
+void BDD::copy_one_node(BDDnode * to, BDDnode * from)
+{
+    // TO BE WRITTEN
+}
+
+BDDnode* BDD::find_or_add_unique_table(BDDnode* node)
+{
+    if (node == NULL)
+        return NULL;
+
+	unique_table_entry* iter = ut_head;
+    unique_table_entry* prev = ut_head;
+    // find in unique table
+    while (iter != NULL) {
+        if (compare(&(iter->key), node))
+            return iter->node;
+        prev = iter;
+        iter = iter->next;
+    }
+
+    // need to append a unique_table_entry
+    if (prev == NULL) {
+        ut_head = new unique_table_entry;
+        copy_one_node(&(ut_head->key),node);
+        ut_head->node = node;
+        ut_head->next = NULL;
+    } else {
+        prev->next = new unique_table_entry;
+        copy_one_node(&(prev->next->key),node);
+        prev->next->node = node;
+        prev->next->next = NULL;
+    }
+    return node;
+}
+
+/*BDDnode& BDD:: find_or_add_unique_table(char v, const BDD &t, const BDD &e)
 {
 	BDD* r= new BDD;
 	r->root = new BDDnode;
@@ -232,8 +273,7 @@ BDD& BDD:: find_or_add_unique_table(char v, const BDD &t, const BDD &e)
 	(*i)->next->key.v = v;
 	(*i)->next->next = NULL;
 	return *r;
-
-}
+}*/
 
 bool BDD::compare(BDDnode* a, BDDnode* b)
 {
@@ -279,7 +319,6 @@ char& BDD::top_var(const BDD& a, const BDD& b)
 	else 
 		return *top1;
 }	
-
 
 
 BDD& BDD::BDD_OR (const BDD & a, const BDD &b)
@@ -407,7 +446,7 @@ BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 				return *t;
 			
 			
-			*r=find_or_add_unique_table(v,*t,*e);
+			//*r=find_or_add_unique_table(v,*t,*e);
 			insert_computed_table(a,b,*r);
 			
 				
@@ -505,3 +544,4 @@ BDD& BDD::ite(const BDD& F, const BDD& G, const BDD& H)
 		r->root->right = e->root;
 		return *r;
 }
+

@@ -1,3 +1,5 @@
+#ifndef __BDD_H__
+#define __BDD_H__
 
 struct BDDnode {
 	char v;
@@ -12,71 +14,63 @@ struct computed_table_key {
 	BDDnode* right;
 };
 
-struct unique_table_key{
-	char v;
-	BDDnode* left;
-	BDDnode* right;
-};
-
 struct computed_table {
 	
 	computed_table_key key;
 	BDDnode* node;
 	computed_table* next;
-//	computed_table* init_ct();
 };
 
-struct unique_table{
-	
-	unique_table_key key;
-	unique_table* next;
-//	unique_table* init_ut();
+struct unique_table_entry {	
+	BDDnode key;
+    BDDnode* node;
+    unique_table_entry* next;
 };
 
 
 extern computed_table* ct  ;
-//ct->key.left = NULL;
-//ct->key.right = NULL;
-//ct->node = NULL;
-//ct->next = NULL;
 extern computed_table** cp;
-extern unique_table* ut ;
-//ut->key.left = NULL;
-//ut->key.right = NULL;
-//ut->key.v = '\0';
-//ut->next = NULL;
+//extern unique_table* ut ;
 
 class BDD {
 	public:
 		BDD();
 		~BDD();
 		BDD& operator=(const BDD & bdd);
-		
-//		computed_table* init_ct();
-//		unique_table* init_ut();
 				
-        	void copy(BDDnode *to, BDDnode* from);
+        void copy(BDDnode *to, BDDnode* from);
+        void copy_one_node(BDDnode * to, BDDnode * from); 
 		void build_literal(char v, bool isP);
 		void destroy_BDD(BDDnode* node);
 		
 		bool isLeaf(BDDnode* bdd);	
 		bool isLiteral(BDDnode* bdd);
-	        bool isBig(BDDnode* bdd);
+	    bool isBig(BDDnode* bdd);
 
 		BDDnode* build_leaf(bool leaf);
 		BDD literal_and(BDD a, BDD b);
 		bool compare(BDDnode* a, BDDnode* b);
-		void insert_computed_table(const BDD& a, const BDD& b, BDD& r);
-		bool computed_table_has_entry(const BDD &a, const BDD &b, BDD &r);
-		BDD& find_or_add_unique_table(char v, const BDD &t, const BDD &e);
-			
+		
+        void insert_computed_table(const BDD& a, const BDD& b, BDD& r);
+        bool computed_table_has_entry(const BDD &a, const BDD &b, BDD &r);
+        
 		char& top_var(const BDD& a, const BDD& b);
-		BDD& sub_BDD(const BDD& bdd, char v, char LR);
 
 		BDD& BDD_OR(const BDD &a, const BDD &b);
 		BDD& BDD_AND(const BDD &a, const BDD &b);
 		BDD& ite(const BDD& F, const BDD& G, const BDD& H);
 //	private:
-		BDDnode* root;
+		
+        BDDnode* root;
 //		CNF cnf(string s);
+        
+        //computed_table ct;
+        
+        // key: (v,left,right), value = BDDnode*, next ptr
+        unique_table_entry* ut_head; 
+		BDDnode* find_or_add_unique_table(BDDnode* node);
+        void destroy_ut();
+        void build_ut();
 };
+
+#endif
