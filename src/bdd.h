@@ -75,7 +75,7 @@ class BDD {
 
 		BDD& BDD_OR(const BDD &a, const BDD &b);
 		BDD& BDD_AND(const BDD &a, const BDD &b);
-
+		BDD& ite(const BDD& F, const BDD& G, const BDD& H);
 //	private:
 		BDDnode* root;
 //		CNF cnf(string s);
