@@ -73,7 +73,7 @@ class BDD {
 		char& top_var(const BDD& a, const BDD& b);
 		BDD& sub_BDD(const BDD& bdd, char v, char LR);
 
-		BDD BDD_OR(const BDD &a, const BDD &b);
+		BDD& BDD_OR(const BDD &a, const BDD &b);
 		BDD& BDD_AND(const BDD &a, const BDD &b);
 
 //	private:

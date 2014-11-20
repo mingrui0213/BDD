@@ -32,8 +32,7 @@ void print (BDD* bdd)
 			nodeInCurrentLevel = nodeInNextLevel;
 			nodeInNextLevel = 0;
 		}
-	}
-	
+	}	
 }
 
 	
@@ -50,8 +49,8 @@ int main()
     
     bddb->build_literal('b',true);
 
-	cout<<bdda->top_var(*bdda, *bddb);
-   
+//	cout<<bdda->top_var(*bdda, *bddb);
+    cout <<"\nbdda is a true litera\nbddb is a true literal\nbddc is a false literal\n"; 
     BDD* r = new BDD;
     *r = r->BDD_AND(*bdda,*bddb);
     cout<<"\n---------bdd_and result--------"<<endl;
@@ -59,7 +58,15 @@ int main()
     bddc->build_literal('c',false); 
     BDD * r2 = new BDD;
     *r2 = r->BDD_AND(*r,*bddc);
+    cout<<"BDD_AND(bdda, bddb, bddc)"<<endl;
     print(r2);
 
+    cout<<"\n--------bdd_or result----------"<<endl;
+    BDD *r3 = new BDD;
+    *r3 = r3->BDD_OR(*bdda, *bddb);
+    BDD *r4 = new BDD;
+    *r4 = r4->BDD_OR(*r3, *bddc);
+    cout<<"BDD_OR(bdda, bddb, bddc)"<<endl;
+    print (r4);
     return 0;
 }

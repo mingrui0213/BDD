@@ -280,6 +280,60 @@ char& BDD::top_var(const BDD& a, const BDD& b)
 		return *top1;
 }	
 
+BDD& BDD::BDD_OR (const BDD & a, const BDD &b)
+{
+	if (isLeaf(a.root)) {
+		if (a.root->leaf == false) {
+			BDD *r = new BDD;
+			return (*r = b);
+		}
+		if (a.root->leaf == true) {
+			BDD *r = new BDD;
+			return (*r = a);
+		}
+	}
+
+	char v = top_var(a, b);
+	BDD* a_left = new BDD;    
+	BDD*  b_left = new BDD; 
+	BDD*  a_right = new BDD;  
+	BDD*  b_right = new BDD;
+	 
+	if (a.root->v == b.root->v) {    							
+		a_left->root = a.root->left;
+		b_left->root = b.root->left;
+		a_right->root = a.root->right;
+		b_right->root = b.root->right;
+		}
+	else {
+		if(a.root->v == v) {
+			a_left->root = a.root->left;
+			a_right->root = a.root->right;
+			b_left->root = b.root;
+			b_right->root = b.root;
+		}
+		if (b.root->v == v) {
+			a_left->root = a.root;
+			a_right->root = a.root;
+			b_left->root = b.root->left;
+			b_right->root = b.root->right;
+		}
+	}
+	BDD *t = new BDD;
+	BDD *e = new BDD;
+	*t = BDD_OR(*a_left, *b_left);
+	*e = BDD_OR(*a_right, *b_right);
+	if (compare(t->root, e->root))
+		return *t;
+	BDD *r = new BDD;
+	r->root = new BDDnode;
+	r->root->v = v;
+	r->root->left = t->root;
+	r->root->right = e->root;
+	return *r;
+}
+
+
 BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 {
 	BDD* r = new BDD;
