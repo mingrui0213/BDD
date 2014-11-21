@@ -73,7 +73,7 @@ int main()
     BDD *r5 = new BDD;
     BDD *false_leaf = new BDD;
     false_leaf->build_leaf(false_leaf->root,false);
-    *r5 = r5->ite(*bdda,*bddb, *false_leaf);
+    *r5 = r5->BDD_ITE(*bdda,*bddb, *false_leaf);
     if(r5->compare(r5->root,r->root))
 	    cout<<"ITE(bdda, bddb, 0) = BDD_AND(bdda, bddb)\n";
     print(r5); 
@@ -82,7 +82,7 @@ int main()
     BDD *r6 = new BDD;
     BDD *true_leaf = new BDD;
     true_leaf->build_leaf(true_leaf->root,true);
-    *r6 = r6->ite(*bdda,*true_leaf,*bddb);
+    *r6 = r6->BDD_ITE(*bdda,*true_leaf,*bddb);
     if(r6->compare(r1->root, r6->root))
 	    cout<<"ITE(bdda,1,bddb) = BDD_OR(bdda,bddb)\n";
     print(r6);

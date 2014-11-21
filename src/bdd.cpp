@@ -412,7 +412,7 @@ BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
 }
 
 
-BDD& BDD::ite(const BDD& F, const BDD& G, const BDD& H)
+BDD& BDD::BDD_ITE(const BDD& F, const BDD& G, const BDD& H)
 {
 	if (F.root == NULL || G.root ==NULL || H.root == NULL) {
 		cout << " not valid BDD! Will return a NULL BDD!"<<endl;
@@ -487,8 +487,8 @@ BDD& BDD::ite(const BDD& F, const BDD& G, const BDD& H)
 		//recursive call
 		BDD *t = new BDD;
 		BDD *e = new BDD;
-		*t = ite(*F_left, *G_left, *H_left);
-		*e = ite(*F_right, *G_right, *H_right);
+		*t = BDD_ITE(*F_left, *G_left, *H_left);
+		*e = BDD_ITE(*F_right, *G_right, *H_right);
 
 		if(compare(t->root,e->root))
 			return *t;

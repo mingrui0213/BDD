@@ -42,14 +42,13 @@ class BDD {
         void build_literal(char v, bool isP);
 		// build a leaf node at 'node', with boolean value 'leaf'
         void build_leaf(BDDnode * & node, bool leaf);
-		BDD literal_and(BDD a, BDD b);
 		
         void insert_computed_table(const BDD& a, const BDD& b, BDD& r);
         bool computed_table_has_entry(const BDD &a, const BDD &b, BDD &r);
         
 		BDD& BDD_OR(const BDD &a, const BDD &b);
 		BDD& BDD_AND(const BDD &a, const BDD &b);
-		BDD& ite(const BDD& F, const BDD& G, const BDD& H);
+		BDD& BDD_ITE(const BDD& F, const BDD& G, const BDD& H);
     
     //private:
 		
