@@ -38,8 +38,7 @@ void print (BDD* bdd)
 	
 int main()
 {
-//    CNF test(s);
-    string s = "(a+b+c+a+c'+b+c'+d)(a+e+d)(b'+d')(z+k+f)";
+    string s = "(a+b+c+a+c'+b+c'+d)(a+e+d)(b'+d')";
     CNF test;
     test.build_analyze(s);
     
@@ -49,7 +48,6 @@ int main()
     
     bddb->build_literal('b',true);
 
-//	cout<<bdda->top_var(*bdda, *bddb);
     cout <<"\nbdda is a true literal\nbddb is a true literal\nbddc is a false literal\n"; 
     BDD* r = new BDD;
     *r = r->BDD_AND(*bdda,*bddb);
@@ -74,7 +72,7 @@ int main()
     cout<<"\n--------ITE(bdda,bddb,0)---------"<<endl;
     BDD *r5 = new BDD;
     BDD *false_leaf = new BDD;
-    false_leaf->root = false_leaf->build_leaf(false);
+    false_leaf->build_leaf(false_leaf->root,false);
     *r5 = r5->ite(*bdda,*bddb, *false_leaf);
     if(r5->compare(r5->root,r->root))
 	    cout<<"ITE(bdda, bddb, 0) = BDD_AND(bdda, bddb)\n";
@@ -83,7 +81,7 @@ int main()
     cout<<"\n-------ITE(bdda, 1, bddb)----------"<<endl;
     BDD *r6 = new BDD;
     BDD *true_leaf = new BDD;
-    true_leaf->root = true_leaf->build_leaf(true);
+    true_leaf->build_leaf(true_leaf->root,true);
     *r6 = r6->ite(*bdda,*true_leaf,*bddb);
     if(r6->compare(r1->root, r6->root))
 	    cout<<"ITE(bdda,1,bddb) = BDD_OR(bdda,bddb)\n";
