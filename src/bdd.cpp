@@ -187,30 +187,6 @@ void BDD::build_leaf(BDDnode * & node, bool leaf)
 	node->isLeaf = true;
 }
 
-/*
-//inputs are literal BDD and top variable are the same
-BDD BDD::literal_and(BDD a, BDD b)
-{
-	BDD r;
-	BDDnode *left;
-    build_leaf(left, a.root->left->leaf & b.root->left->leaf);
-	BDDnode *right;
-	build_leaf(right,a.root->right->leaf & b.root->right->leaf);
-
-	r.root = new BDDnode;
-	r.root->v = a.root->v;
-	r.root->isLeaf = 0;
-	r.root->leaf = 0;
-
-//	bool d= isLeaf(left);
-//	cout<<d;
-
-	r.root->left= left;
-	r.root->right = right;
-
-	return r;
-}*/
-
 void BDD::copy_one_node(BDDnode *to, BDDnode *from)
 {
     to->v = from->v;
@@ -225,13 +201,14 @@ void BDD::find_or_add_unique_table(BDDnode * & node)
     if (node == NULL)
         return;
 
-	unique_table_entry *iter = ut_head;
+    unique_table_entry *iter = ut_head;
     unique_table_entry *prev = ut_head;
     // find in unique table
     while (iter != NULL) {
         if (compare(&(iter->key), node)){
-            //delete node;
+            delete node;
             node = iter->node;
+            return;
         }
         prev = iter;
         iter = iter->next;
