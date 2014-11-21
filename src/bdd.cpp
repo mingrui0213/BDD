@@ -198,6 +198,7 @@ void BDD::copy_one_node(BDDnode *to, BDDnode *from)
 
 void BDD::find_or_add_unique_table(BDDnode * & node)
 {
+    cout << "access unique table" << endl;
     if (node == NULL)
         return;
 
@@ -411,93 +412,90 @@ BDD& BDD::BDD_AND(const BDD & a, const BDD &b)
     return *r;
 }
 
-
 BDD& BDD::BDD_ITE(const BDD& F, const BDD& G, const BDD& H)
 {
-	if (F.root == NULL || G.root ==NULL || H.root == NULL) {
+	BDD *r = new BDD;
+    if (F.root == NULL || G.root ==NULL || H.root == NULL) {
 		cout << " not valid BDD! Will return a NULL BDD!"<<endl;
-		BDD *r = new BDD;
 		return *r;
-	}
-
-	if (isLeaf(F.root))
-	{
+	} else if (isLeaf(F.root)) {
 		if(F.root->leaf == false) {
-			BDD *r = new BDD;
-			return (*r = H);
+			return *r = H;
 		}
 		if(F.root->leaf == true) {
 			BDD *r = new BDD;
-			return (*r = G);
+			return *r = G;
 		}
 	}
-		//find top var
-		char v;
-		char *v1 = new char;
-		*v1 =  top_var(F,G);
-		char *v2 = new char;
-		*v2 = top_var(G,H);
-		if (*v1 != '\0' && *v2 != '\0') {
-			if (strcmp(v1, v2)<=0)
-				v = *v1;
-			else
-				v = *v2;	
-	 	}
-	 	else if (*v1 != '\0' && *v2 == '\0')
-			 v = *v1;
-		else if (*v1 == '\0' && *v2 != '\0')
-			v = *v2;
-		else 
-			v = *v1;
 
-		//find sub BDD
-		BDD *F_left = new BDD;
-		BDD *G_left = new BDD;
-		BDD *H_left = new BDD;
-		BDD *F_right = new BDD;
-		BDD *G_right = new BDD;
-		BDD *H_right = new BDD;
-		
-		if (v==F.root->v) {
-			F_left->root = F.root->left;
-			F_right->root = F.root->right;
-		}
-		if (v==G.root->v) {
-			G_left->root = G.root->left;
-			G_right->root = G.root->right;
-		}
-		if (v==H.root->v) {
-			H_left->root = H.root->left;
-			H_right->root = H.root->right;
-		}
+    //find top var
+    char v;
+    char *v1 = new char;
+    *v1 =  top_var(F,G);
+    char *v2 = new char;
+    *v2 = top_var(G,H);
+    if (*v1 != '\0' && *v2 != '\0') {
+        if (strcmp(v1, v2) <= 0) // alphebatical order
+            v = *v1;
+        else
+            v = *v2;
+    }
+    else if (*v1 != '\0' && *v2 == '\0')
+         v = *v1;
+    else if (*v1 == '\0' && *v2 != '\0')
+        v = *v2;
+    else
+        v = *v1;
 
-		if (F_left->root == NULL ) {
-			*F_left = F;
-			*F_right = F;
-		}
-		if (G_left->root == NULL) {
-			*G_left = G;
-			*G_right = G;
-		}
-		if(H_left->root == NULL) {
-			*H_left = H;
-			*H_right = H;
-		}
+    //find sub BDD
+    BDD *F_left = new BDD;
+    BDD *G_left = new BDD;
+    BDD *H_left = new BDD;
+    BDD *F_right = new BDD;
+    BDD *G_right = new BDD;
+    BDD *H_right = new BDD;
+    
+    if (v==F.root->v) {
+        F_left->root = F.root->left;
+        F_right->root = F.root->right;
+    }
+    if (v==G.root->v) {
+        G_left->root = G.root->left;
+        G_right->root = G.root->right;
+    }
+    if (v==H.root->v) {
+        H_left->root = H.root->left;
+        H_right->root = H.root->right;
+    }
+    if (F_left->root == NULL) {
+        *F_left = F;
+        *F_right = F;
+    }
+    if (G_left->root == NULL) {
+        *G_left = G;
+        *G_right = G;
+    }
+    if (H_left->root == NULL) {
+        *H_left = H;
+        *H_right = H;
+    }
 
-		//recursive call
-		BDD *t = new BDD;
-		BDD *e = new BDD;
-		*t = BDD_ITE(*F_left, *G_left, *H_left);
-		*e = BDD_ITE(*F_right, *G_right, *H_right);
+    //recursive call
+    BDD *t = new BDD;
+    BDD *e = new BDD;
+    *t = BDD_ITE(*F_left, *G_left, *H_left);
+    *e = BDD_ITE(*F_right, *G_right, *H_right);
 
-		if(compare(t->root,e->root))
-			return *t;
+    if (compare(t->root,e->root))
+        return *t;
 
-		BDD *r = new BDD;
-		r->root = new BDDnode;
-		r->root->v = v;
-		r->root->left = t->root;
-		r->root->right = e->root;
-		return *r;
+    r->root = new BDDnode;
+    r->root->v = v;
+    r->root->leaf = false;
+    r->root->left = t->root;
+    r->root->right = e->root;
+    r->root->isLeaf = false;
+    find_or_add_unique_table(r->root);
+    return *r;
 }
 

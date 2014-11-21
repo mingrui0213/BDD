@@ -46,9 +46,9 @@ class BDD {
         void insert_computed_table(const BDD& a, const BDD& b, BDD& r);
         bool computed_table_has_entry(const BDD &a, const BDD &b, BDD &r);
         
-		BDD& BDD_OR(const BDD &a, const BDD &b);
-		BDD& BDD_AND(const BDD &a, const BDD &b);
-		BDD& BDD_ITE(const BDD& F, const BDD& G, const BDD& H);
+		BDD& BDD_OR(const BDD & a, const BDD & b);
+		BDD& BDD_AND(const BDD & a, const BDD & b);
+		BDD& BDD_ITE(const BDD & F, const BDD & G, const BDD & H);
     
     //private:
 		
